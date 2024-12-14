@@ -1,14 +1,17 @@
 'use client'
 
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-
 import { useEditor, EditorContent } from '@tiptap/react'
 
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
+
+import { getCardById, updateCard } from "@/app/actions";
+
 import XAltIcon from "@/assets/X-Alt-Icon";
-import {useEffect, useState} from "react";
-import {getCardById, updateCard} from "@/app/actions";
+
+export const runtime = 'edge';
 
 const Page = ({params}) => {
     const router = useRouter();

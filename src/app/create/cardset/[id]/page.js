@@ -7,6 +7,8 @@ import { createCardset } from "@/app/actions";
 
 import XAltIcon from "@/assets/X-Alt-Icon";
 
+export const runtime = 'edge';
+
 export default function Page({params}) {
     const router = useRouter();
 

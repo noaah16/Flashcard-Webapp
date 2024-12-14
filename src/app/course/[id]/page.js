@@ -3,6 +3,8 @@
 import XAltIcon from "@/assets/X-Alt-Icon";
 import {useRouter} from "next/navigation";
 
+export const runtime = 'edge';
+
 const Page = ({params}) => {
     const router = useRouter();
 
