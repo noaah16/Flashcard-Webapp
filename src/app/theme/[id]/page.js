@@ -1,11 +1,9 @@
+import { getAllCardsets, getTheme } from "@/app/actions";
+
 import Link from "next/link";
 
 import { emptyList } from "@/lib/messages";
-import { getAllCardsets, getTheme } from "@/app/actions";
-
 import PlusAltIcon from "@/assets/Plus-Alt-Icon";
-
-export const runtime = 'edge';
 
 const Page = async ({params}) => {
     const theme_data = await getTheme(params.id)

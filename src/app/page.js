@@ -6,8 +6,6 @@ import { emptyList } from "@/lib/messages";
 import PlusAltIcon from "@/assets/Plus-Alt-Icon";
 import Image from "next/image";
 
-export const runtime = 'edge';
-
 const Page = async () => {
     const data = await getAllThemes()
 

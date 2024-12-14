@@ -7,8 +7,6 @@ import { createTheme } from "@/app/actions";
 
 import XAltIcon from "@/assets/X-Alt-Icon";
 
-export const runtime = 'edge';
-
 export default function Page() {
     const router = useRouter();
 

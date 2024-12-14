@@ -11,8 +11,6 @@ import { getCardById, updateCard } from "@/app/actions";
 
 import XAltIcon from "@/assets/X-Alt-Icon";
 
-export const runtime = 'edge';
-
 const Page = ({params}) => {
     const router = useRouter();
 

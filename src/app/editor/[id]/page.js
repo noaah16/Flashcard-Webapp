@@ -3,8 +3,6 @@ import {getAllCardsById, getCardset} from "@/app/actions";
 import PlusAltIcon from "@/assets/Plus-Alt-Icon";
 import {emptyList} from "@/lib/messages";
 
-export const runtime = 'edge';
-
 const Page = async ({params}) => {
     const cardset_data = await getCardset(params.id)
     const cards_data = await getAllCardsById(params.id)
