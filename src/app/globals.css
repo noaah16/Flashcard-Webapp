@@ -392,6 +392,13 @@ button.dark:hover {
   border: 5px solid #515f78;
   border-radius: 10px;
   user-select: none;
+  transition: border 200ms ease;
+}
+.flip-card-back.green-border {
+  border: 10px solid var(--green);
+}
+.flip-card-back.red-border {
+  border: 15px solid var(--red);
 }
 
 .flip-card-content {
@@ -428,9 +435,16 @@ button.dark:hover {
 .course-interactions button {
   flex: 1;
 }
+.course-interactions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.2;
+  color: var(--white);
+}
+
 .course-interactions button:nth-child(2) {
   flex: 1.6;
 }
+
 .course-interactions a:nth-child(2) {
   flex: 1.6;
 }

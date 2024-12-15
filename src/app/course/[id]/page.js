@@ -19,48 +19,64 @@ const Page = ({params}) => {
         router.push(`/theme/${data["__theme"].theme_id}`)
         router.refresh()
     }
+
     const handleClickNo = async (event) => {
         event.preventDefault()
+
+        const cardElement = document.querySelector(`.flip-card-back`)
+        cardElement.classList.add("red-border")
 
         const result = await updateCourseCard(params.id, flashcard.flashcard_id, false);
         if(!result.acknowledged) return null
 
-        setFlipped(false)
-
         const data = await getAnotherCourseCard(params.id)
-        setFlashcard(data["flashcard"])
 
-        setData(prevState => ({
-            ...prevState,
-            _cards_count: data["_cards_count"],
-            _finished_count: data["_finished_count"]
-        }))
+        setTimeout(() => {
+            setFlashcard(data["flashcard"])
+
+            setData(prevState => ({
+                ...prevState,
+                _cards_count: data["_cards_count"],
+                _finished_count: data["_finished_count"]
+            }))
+
+            setFlipped(false)
+            cardElement.classList.remove("red-border")
+        }, 300)
     }
-    const handleClickFlip = () => {
-        setFlipped(!flipped)
-    }
+
     const handleClickYes = async (event) => {
         event.preventDefault()
+
+        const cardElement = document.querySelector(`.flip-card-back`)
+        cardElement.classList.add("green-border")
 
         const result = await updateCourseCard(params.id, flashcard.flashcard_id, true);
         if(!result.acknowledged) return null
 
-        setFlipped(false)
-
         const data = await getAnotherCourseCard(params.id)
 
-        if(data["flashcard"] === null) {
-            setFinished(true)
-        } else {
-            setFlashcard(data["flashcard"])
-        }
+        setTimeout(() => {
+            if(data["flashcard"] === null) {
+                setFinished(true)
+            } else {
+                setFlashcard(data["flashcard"])
+            }
 
-        setData(prevState => ({
-            ...prevState,
-            _cards_count: data["_cards_count"],
-            _finished_count: data["_finished_count"]
-        }))
+            setData(prevState => ({
+                ...prevState,
+                _cards_count: data["_cards_count"],
+                _finished_count: data["_finished_count"]
+            }))
 
+            setFlipped(false)
+            cardElement.classList.remove("green-border")
+        }, 500)
+
+    }
+
+    const handleClickFlip = () => {
+        setFlipped(!flipped)
     }
 
     useEffect(() => {
@@ -130,9 +146,9 @@ const Page = ({params}) => {
                 </div>
             </div>
             <div className="course-interactions">
-                <button onClick={handleClickNo} className="no">No</button>
+                <button disabled={!flipped} onClick={handleClickNo} className="no">No</button>
                 <button onClick={handleClickFlip} className="btn-flip">Flip</button>
-                <button onClick={handleClickYes} className="yes">Yes</button>
+                <button disabled={!flipped} onClick={handleClickYes} className="yes">Yes</button>
             </div>
         </div>
     )
