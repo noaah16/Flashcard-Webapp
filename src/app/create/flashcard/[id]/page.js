@@ -1,29 +1,33 @@
 'use client'
 
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { useRouter } from "next/navigation";
 import { useEditor, EditorContent } from '@tiptap/react'
 
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
 
-import { createCardDraft, finishCreateCard } from "@/app/actions";
+import {createCardDraft, finishCreateCard, getAIAnswers} from "@/app/actions";
 
 import XAltIcon from "@/assets/X-Alt-Icon";
 
 export default function Page({params}) {
     const router = useRouter();
 
+    const [isAiError, setIsAiError] = useState(false)
+    const [aiAnswers, setAiAnswers] = useState([])
     const [draftFlashcardId, setDraftFlashcardId] = useState("")
-    
+
     const [page, setPage] = useState("question")
 
     const questionEditor = useEditor({
         extensions: [ StarterKit, Placeholder.configure({ placeholder: "Schreibe hier die Frage" })],
+        immediatelyRender: false,
         content: '',
     })
     const answerEditor = useEditor({
         extensions: [ StarterKit, Placeholder.configure({ placeholder: "Schreibe hier die Antwort" })],
+        immediatelyRender: false,
         content: '',
     })
 
@@ -60,6 +64,24 @@ export default function Page({params}) {
 
     }
 
+    const handleSelectAnswer = async (answer) => {
+        if(!answerEditor) return
+        answerEditor.commands.setContent(answer)
+    }
+
+    useEffect(() => {
+        const fetchAIAnswers = async () => {
+            const data = await getAIAnswers(questionEditor.getText())
+            if(data.error) return setIsAiError(true)
+            setAiAnswers(data.answers)
+        }
+
+        if(page === "answer") {
+            console.log("Hallo", page)
+            fetchAIAnswers().then()
+        }
+    }, [page, questionEditor]);
+
     switch (page) {
         case "question":
             return <div className="container">
@@ -90,9 +112,33 @@ export default function Page({params}) {
                 </div>
 
                 <form onSubmit={handleSubmitCreate}>
-                    <EditorContent editor={answerEditor} />
+                    <EditorContent editor={answerEditor}/>
                     <button>Erstellen</button>
                 </form>
+
+                <div className="ai-stuff">
+                    <h3>KI-Generierte Antworten</h3>
+                    <label>zum auswählen, anklicken</label>
+
+                    {
+                        aiAnswers && aiAnswers.length ? <div className="ai-list">
+                            {
+                                aiAnswers.map((value, index) => {
+                                    return (
+                                        <div onClick={() => handleSelectAnswer(value)} key={index}
+                                             className="ai-item">
+                                            {value}
+                                        </div>
+                                    )
+                                })
+                            }
+                        </div> : <div className="ai-list">
+                            {
+                                isAiError ? <p>Es konnten keine Antworten generiert werden</p> : <p>Antworten werden geladen...</p>
+                            }
+                        </div>
+                    }
+                </div>
             </div>
         default:
             return <div className="container">

@@ -1,7 +1,13 @@
 'use server'
 
+import { OpenAI } from "openai";
+
 import { generateId } from "@/lib/id";
 import mongodb from "@/lib/mongodb";
+
+const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY || "",
+});
 
 export const getTheme = async (theme_id) => {
     try {
@@ -23,8 +29,6 @@ export const getAllThemes = async () => {
         const client = await mongodb
         const database = client.db("flashcard-app");
         const themes_collection = await database.collection("themes");
-
-        console.log(`user ${process.env.DB_USER}`)
 
         const themes = await themes_collection.find({
             user_id: process.env.DB_USER,
@@ -181,6 +185,7 @@ export const getAllCards = async (cardset_id) => {
         return { error: "ERROR" };
     }
 }
+
 export const createCardDraft = async (cardset_id, name, questionHTML) => {
     try {
         const client = await mongodb
@@ -250,6 +255,7 @@ export const finishCreateCard = async (flashcard_id, cardset_id, answerHTML) => 
         return { error: "ERROR" };
     }
 }
+
 export const updateCard = async (flashcard_id, name, questionHTML, answerHTML) => {
     try {
         const client = await mongodb
@@ -277,6 +283,9 @@ export const updateCard = async (flashcard_id, name, questionHTML, answerHTML) =
         console.error(e);
         return { error: "ERROR" };
     }
+}
+export const deleteCard = async (flashcard_id) => {
+    //TODO:
 }
 
 export const startCourse = async (cardset_id) => {
@@ -483,3 +492,60 @@ export const updateCourseCard = async (cardset_id, flashcard_id, type) => {
         return { error: "ERROR" };
     }
 }
+
+// OTHER THINGS //
+
+export const getAIAnswers = async (question) => {
+    try {
+        const tools = [
+            {
+                type: "function",
+                function: {
+                    name: "get_messages",
+                    parameters: {
+                        type: "object",
+                        required: [
+                            "question",
+                            "answers"
+                        ],
+                        properties: {
+                            question: {
+                                type: "string",
+                                description: "The question to which answers are to be given"
+                            },
+                            answers: {
+                                type: "array",
+                                description: "List of 2 to 3 answers",
+                                items: {
+                                    type: "string",
+                                    description: "Answer to the question"
+                                }
+                            }
+                        },
+                        additionalProperties: false
+                    }
+                },
+            }
+        ];
+
+        const response = await openai.chat.completions.create({
+            model: "gpt-3.5-turbo-0125",
+            messages: [
+                {
+                    role: "user",
+                    content: question,
+                }
+            ],
+            tools: tools
+        })
+
+        console.log(response.choices[0].message.tool_calls[0].function.arguments)
+
+        return JSON.parse(response.choices[0].message.tool_calls[0].function.arguments)
+
+    } catch (e) {
+        console.error(e);
+        return { error: "ERROR" };
+    }
+}
+

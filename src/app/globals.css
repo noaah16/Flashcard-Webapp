@@ -8,6 +8,8 @@
   --blue: #6A88EC;
   --orange: #ECAF6A;
 
+  --ai-purple: #923ed6;
+
   --white: #FFFFFF;
   --white-dim: #a2a5a8;
 
@@ -271,6 +273,31 @@ button.dark:hover {
 .interaction button.dark:hover {
   background: rgb(84, 99, 126, 0.8) !important;
   border: 1px solid rgb(84, 99, 126);
+}
+
+.ai-stuff {
+  margin-top: 25px;
+}
+.ai-stuff h3 {
+  color: var(--white);
+}
+.ai-stuff label {
+  color: var(--white-dim);
+  font-size: 14px;
+}
+.ai-list {
+  display: flex;
+  flex-flow: column;
+  gap: 10px;
+  margin-top: 15px;
+}
+.ai-list .ai-item {
+  background: rgba(146, 62, 214, 0.3);
+  border: 1px solid rgba(146, 62, 214, 1);
+  color: #e2c7f8;
+  padding: 15px;
+  border-radius: 10px;
+  cursor: pointer;
 }
 
 .edit-container {
