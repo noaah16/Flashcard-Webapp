@@ -94,14 +94,16 @@ const Page = ({params}) => {
 
     return (
         <div className="course-container">
-            <div className="course-cancel">
-                <button onClick={handleCancelClick} className="icon-button">
-                    <XAltIcon/>
-                </button>
-            </div>
             <div className="course-head">
-                <label> {data["__theme"].name} </label>
-                <h3> {data["__cardset"].name} </h3>
+                <div className="course-info">
+                    <div className="course-info-title">
+                        <label> {data["__theme"].name} </label>
+                        <h3> {data["__cardset"].name} </h3>
+                    </div>
+                    <button onClick={handleCancelClick} className="icon-button">
+                        <XAltIcon/>
+                    </button>
+                </div>
                 <div className="process-container">
                     <div className="process-bar">
                         <div className="process"

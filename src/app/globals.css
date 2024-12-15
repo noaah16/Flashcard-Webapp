@@ -285,10 +285,6 @@ button.dark:hover {
   gap: 25px;
 }
 
-.course-cancel {
-  height: 30px;
-}
-
 .course-head {
   display: flex;
   flex-flow: column;
@@ -301,6 +297,17 @@ button.dark:hover {
 .course-head h3 {
   color: var(--white);
   font-size: 20px;
+}
+
+.course-head .course-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.course-head .course-info-title {
+  display: flex;
+  flex-flow: column;
+  gap: 10px;
 }
 
 .course-head .process-container {
