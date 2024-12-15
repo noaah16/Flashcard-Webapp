@@ -330,6 +330,7 @@ button.dark:hover {
   width: 100%;
   height: 100%;
   border-radius: 10px;
+  user-select: none;
 }
 .flip-card-inner {
   position: relative;

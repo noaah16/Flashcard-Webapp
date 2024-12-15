@@ -32,7 +32,7 @@ const Page = async ({params}) => {
                                 <p> {item.name.length > 55 ? item.name.substring(0, 55) + "..." : item.name.substring(0, 55)} </p>
                                 <div className="item-info">
                                     <p>{item.count_cards || 0} cards</p>
-                                    <p>{item.finished_count} cards reviewed</p>
+                                    <p>{item.finished_count || 0} cards reviewed</p>
                                 </div>
                                 <div className="interaction">
                                     <Link href={`/course/${item.cardset_id}`}>
