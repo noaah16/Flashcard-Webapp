@@ -28,14 +28,16 @@ const Page = async ({params}) => {
                 {
                     !cardsets_data.length ? emptyList : cardsets_data.map((item, index) => {
                         return (
-                            <div key={index} className="item">
+                            <div key={index} className={`item ${item.count_cards === item.finished_count ? "completed": ""}`}>
                                 <p> {item.name.length > 55 ? item.name.substring(0, 55) + "..." : item.name.substring(0, 55)} </p>
                                 <div className="item-info">
                                     <p>{item.count_cards || 0} cards</p>
-                                    <p>0 cards reviewed</p>
+                                    <p>{item.finished_count} cards reviewed</p>
                                 </div>
                                 <div className="interaction">
-                                <button>Start Session</button>
+                                    <Link href={`/course/${item.cardset_id}`}>
+                                        <button>Start Course</button>
+                                    </Link>
                                     <Link href={`/editor/${item.cardset_id}`}>
                                         <button className="dark">Edit</button>
                                     </Link>

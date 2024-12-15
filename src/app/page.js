@@ -1,3 +1,7 @@
+'use client'
+
+import {useEffect, useState} from "react";
+
 import { getAllThemes } from "@/app/actions";
 import Link from "next/link";
 
@@ -6,8 +10,23 @@ import { emptyList } from "@/lib/messages";
 import PlusAltIcon from "@/assets/Plus-Alt-Icon";
 import Image from "next/image";
 
-const Page = async () => {
-    const data = await getAllThemes()
+const Page = () => {
+
+    const [themesData, setThemesData] = useState(null)
+
+    useEffect(() => {
+        const fetchThemes = async () => {
+            const data = await getAllThemes()
+            setThemesData(data)
+        }
+        fetchThemes().then()
+    }, []);
+
+    if(!themesData) {
+        return <div className="container themes">
+            <p>Loading...</p>
+        </div>
+    }
 
     return (
         <div className="container themes">
@@ -16,7 +35,7 @@ const Page = async () => {
             </div>
             <div className="list">
                 {
-                    !data.length ? <p> { emptyList } </p> : data.map((item, index) => {
+                    !themesData.length ? <p> { emptyList } </p> : themesData.map((item, index) => {
                         return <Link key={index} href={`/theme/${item.theme_id}`}>
                             <div key={index} className="item center">
                                 <p> { item.name } </p>
@@ -29,7 +48,7 @@ const Page = async () => {
             <div className="button-container">
 
                 {
-                    !data.length ? <div className="welcome-newbie">
+                    !themesData.length ? <div className="welcome-newbie">
                         <div className="welcome-bubble">
                             <p>Erstelle hier ein Thema. Du kannst dann in dem Thema Kartensets und Karteikarten
                                 erstellen.</p>

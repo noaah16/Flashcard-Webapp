@@ -25,9 +25,9 @@ export const getAllThemes = async () => {
         const database = client.db("flashcard-app");
         const themes_collection = await database.collection("themes");
 
-        return await themes_collection.find({
-            user_id: "", //TODO: USER ID
-        }).toArray();
+        const themes = await themes_collection.find({}).toArray();
+
+        return JSON.parse(JSON.stringify(themes));
 
     } catch (e) {
         console.error(e);
@@ -77,10 +77,13 @@ export const getCardset = async (cardset_id) => {
         const database = client.db("flashcard-app");
         const cardset_collection = await database.collection("cardsets");
 
-        return await cardset_collection.findOne({
+        const cardset = await cardset_collection.findOne({
             user_id: "", //TODO: USER ID
             cardset_id: cardset_id
         })
+
+        return JSON.parse(JSON.stringify(cardset));
+
     } catch (e) {
         console.error(e);
         return { error: "ERROR" };
@@ -160,7 +163,7 @@ export const getCardById = async (flashcard_id) => {
         return { error: "ERROR" };
     }
 }
-export const getAllCardsById = async (cardset_id) => {
+export const getAllCards = async (cardset_id) => {
     try {
         const client = await mongodb
         const database = client.db("flashcard-app");
@@ -262,6 +265,211 @@ export const updateCard = async (flashcard_id, name, questionHTML, answerHTML) =
         return JSON.parse(JSON.stringify({
             acknowledged: flashcard.acknowledged,
             matchedCount: flashcard.matchedCount
+        }));
+
+    } catch (e) {
+        console.error(e);
+        return { error: "ERROR" };
+    }
+}
+
+export const startCourse = async (cardset_id) => {
+    const client = await mongodb;
+    const database = client.db("flashcard-app");
+    const flashcards_collection = await database.collection("flashcards");
+    const cardset_collection = await database.collection("cardsets");
+    const themes_collection = await database.collection("themes");
+
+    const session = client.startSession();
+
+    try {
+        session.startTransaction();
+
+        const cardset = await cardset_collection.findOneAndUpdate({
+            user_id: "", //TODO: USER ID
+            cardset_id: cardset_id,
+        }, {
+            $set: {
+                status: "started" // not_started - started
+            }
+        })
+
+        const theme = await themes_collection.findOne({
+            user_id: "",
+            theme_id: cardset.theme_id
+        })
+
+        const flashcard = await flashcards_collection.aggregate([
+            {
+                $match: {
+                    user_id: "", // TODO: Benutzer-ID einfügen
+                    cardset_id: cardset_id,
+                    draft: false,
+                }
+            },
+            {
+                $sample: { size: 1 }
+            }
+        ]).toArray();
+
+        const finished_count = await flashcards_collection.countDocuments({
+            user_id: "", //TODO: USER ID
+            cardset_id: cardset_id,
+            status: "finished"
+        });
+
+        const cards_count = await flashcards_collection.countDocuments({
+            user_id: "", //TODO: USER ID
+            cardset_id: cardset_id,
+        });
+
+        await session.commitTransaction();
+
+        return JSON.parse(JSON.stringify({
+            flashcard: flashcard[0],
+            __theme: theme,
+            __cardset: cardset,
+            _cards_count: cards_count,
+            _finished_count: finished_count,
+        }))
+
+    } catch (e) {
+        console.error(e);
+        await session.abortTransaction();
+        return { error: "ERROR" };
+    }
+}
+export const resetCourse = async (cardset_id) => {
+    const client = await mongodb;
+    const database = client.db("flashcard-app");
+    const flashcards_collection = await database.collection("flashcards");
+    const cardset_collection = await database.collection("cardsets");
+
+    const session = client.startSession()
+
+    try {
+        session.startTransaction();
+
+        const cardset = await cardset_collection.updateOne({
+            user_id: "", //TODO: USER ID
+            cardset_id: cardset_id,
+        }, {
+            $set: {
+                status: "not_started",
+                finished_count: 0
+            }
+        })
+
+        await flashcards_collection.updateMany({
+            user_id: "", //TODO: USER ID
+            cardset_id: cardset_id,
+        }, {
+            $set: {
+                status: "unfinished"
+            }
+        })
+
+        await session.commitTransaction();
+
+        return JSON.parse(JSON.stringify({
+            acknowledged: cardset.acknowledged,
+            matchedCount: cardset.matchedCount,
+        }));
+
+    } catch (e) {
+        console.error(e);
+        await session.abortTransaction();
+        return { error: "ERROR" };
+    }
+
+}
+
+export const getAnotherCourseCard = async (cardset_id) => {
+    try {
+        const client = await mongodb
+        const database = client.db("flashcard-app");
+        const flashcards_collection = await database.collection("flashcards");
+        const cardset_collection = await database.collection("cardsets");
+
+        const flashcard = await flashcards_collection.aggregate([
+            {
+                $match: {
+                    user_id: "", // TODO: Benutzer-ID einfügen
+                    cardset_id: cardset_id,
+                    draft: false,
+                    $or: [
+                        { status: "unfinished" },
+                        { status: { $exists: false } }
+                    ]
+                }
+            },
+            {
+                $sample: { size: 1 }
+            }
+        ]).toArray();
+
+        const finished_count = await flashcards_collection.countDocuments({
+            user_id: "", //TODO: USER ID
+            cardset_id: cardset_id,
+            status: "finished"
+        });
+        const cards_count = await flashcards_collection.countDocuments({
+            user_id: "", //TODO: USER ID
+            cardset_id: cardset_id,
+        });
+
+        console.log(flashcard[0])
+
+        if(!flashcard[0]) {
+            await cardset_collection.updateOne({
+                cardset_id: cardset_id,
+            }, {
+                $set: {
+                    status: "finished"
+                }
+            })
+        }
+
+        return JSON.parse(JSON.stringify({
+            flashcard: flashcard[0] || null,
+            _cards_count: cards_count,
+            _finished_count: finished_count,
+        }))
+
+    } catch (e) {
+        console.error(e);
+        return { error: "ERROR" };
+    }
+}
+export const updateCourseCard = async (cardset_id, flashcard_id, type) => {
+    try {
+        const client = await mongodb
+        const database = client.db("flashcard-app");
+        const flashcards_collection = await database.collection("flashcards");
+        const cardset_collection = await database.collection("cardsets");
+
+        const flashcard = await flashcards_collection.updateOne({
+            user_id: "", //TODO: USER ID
+            cardset_id: cardset_id,
+            flashcard_id: flashcard_id
+        }, {
+            $set: {
+                status: type ? "finished" : "unfinished"
+            }
+        })
+
+        await cardset_collection.updateOne({
+            user_id: "", //TODO: USER ID
+            cardset_id: cardset_id,
+        }, {
+            $inc: {
+                finished_count: 1
+            }
+        })
+
+        return JSON.parse(JSON.stringify({
+            acknowledged: flashcard.acknowledged,
+            matchedCount: flashcard.matchedCount,
         }));
 
     } catch (e) {
