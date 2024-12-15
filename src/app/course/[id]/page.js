@@ -70,6 +70,9 @@ const Page = ({params}) => {
                 setFinished(true)
             } else {
                 setFlashcard(data["flashcard"])
+                setLoadCard(false)
+                setFlipped(false)
+                cardElement.classList.remove("green-border")
             }
 
             setData(prevState => ({
@@ -77,10 +80,6 @@ const Page = ({params}) => {
                 _cards_count: data["_cards_count"],
                 _finished_count: data["_finished_count"]
             }))
-
-            setLoadCard(false)
-            setFlipped(false)
-            cardElement.classList.remove("green-border")
         }, 300)
 
     }
