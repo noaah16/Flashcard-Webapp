@@ -320,6 +320,10 @@ export const startCourse = async (cardset_id) => {
                     user_id: process.env.DB_USER,
                     cardset_id: cardset_id,
                     draft: false,
+                    $or: [
+                        { status: "unfinished" },
+                        { status: { $exists: false } }
+                    ]
                 }
             },
             {
