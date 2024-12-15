@@ -1,9 +1,10 @@
 'use client'
 
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import {getCardset, resetCourse, startCourse} from "@/app/actions";
-import {useEffect, useState} from "react";
 import Link from "next/link";
+
+import { getCardset, resetCourse } from "@/app/actions";
 
 const Page = ({params}) => {
     const router = useRouter();

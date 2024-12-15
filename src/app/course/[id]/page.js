@@ -1,9 +1,11 @@
 'use client'
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
+import { getAnotherCourseCard, startCourse, updateCourseCard } from "@/app/actions";
+
 import XAltIcon from "@/assets/X-Alt-Icon";
-import {useRouter} from "next/navigation";
-import {useEffect, useState} from "react";
-import {getAnotherCourseCard, startCourse, updateCourseCard} from "@/app/actions";
 
 const Page = ({params}) => {
     const router = useRouter();

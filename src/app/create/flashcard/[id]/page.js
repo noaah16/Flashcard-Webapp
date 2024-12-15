@@ -3,10 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useEditor, EditorContent } from '@tiptap/react'
-import {createCardDraft, finishCreateCard} from "@/app/actions";
 
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
+
+import { createCardDraft, finishCreateCard } from "@/app/actions";
 
 import XAltIcon from "@/assets/X-Alt-Icon";
 

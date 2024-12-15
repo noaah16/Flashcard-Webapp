@@ -1,9 +1,9 @@
 'use client'
 
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 
 import { getAllThemes } from "@/app/actions";
-import Link from "next/link";
 
 import { emptyList } from "@/lib/messages";
 

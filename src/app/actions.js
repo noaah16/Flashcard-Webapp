@@ -1,7 +1,7 @@
 'use server'
 
-import mongodb from "@/lib/mongodb";
 import { generateId } from "@/lib/id";
+import mongodb from "@/lib/mongodb";
 
 export const getTheme = async (theme_id) => {
     try {
@@ -10,7 +10,7 @@ export const getTheme = async (theme_id) => {
         const themes_collection = await database.collection("themes");
 
         return await themes_collection.findOne({
-            user_id: process.env.USER,
+            user_id: process.env.USERNAME,
             theme_id: theme_id
         })
     } catch (e) {
@@ -25,7 +25,7 @@ export const getAllThemes = async () => {
         const themes_collection = await database.collection("themes");
 
         const themes = await themes_collection.find({
-            user_id: process.env.USER,
+            user_id: process.env.USERNAME,
         }).toArray();
 
         return JSON.parse(JSON.stringify(themes));
@@ -42,7 +42,7 @@ export const createTheme = async (name) => {
         const themes_collection = await database.collection("themes");
 
         const themes = await themes_collection.insertOne({
-            user_id: process.env.USER,
+            user_id: process.env.USERNAME,
             theme_id: generateId(),
             name: name
         })
@@ -63,7 +63,7 @@ export const deleteTheme = async (theme_id) => {
         const themes_collection = await database.collection("themes");
 
         return await themes_collection.deleteOne({
-            user_id: process.env.USER,
+            user_id: process.env.USERNAME,
             theme_id: theme_id
         })
     } catch (e) {
@@ -79,7 +79,7 @@ export const getCardset = async (cardset_id) => {
         const cardset_collection = await database.collection("cardsets");
 
         const cardset = await cardset_collection.findOne({
-            user_id: process.env.USER,
+            user_id: process.env.USERNAME,
             cardset_id: cardset_id
         })
 
@@ -97,7 +97,7 @@ export const getAllCardsets = async (theme_id) => {
         const cardset_collection = await database.collection("cardsets");
 
         return await cardset_collection.find({
-            user_id: process.env.USER,
+            user_id: process.env.USERNAME,
             theme_id: theme_id
         }).toArray();
 
@@ -113,7 +113,7 @@ export const createCardset = async (theme_id, name) => {
         const cardset_collection = await database.collection("cardsets");
 
         const cardsets = await cardset_collection.insertOne({
-            user_id: process.env.USER,
+            user_id: process.env.USERNAME,
             theme_id: theme_id,
             cardset_id: generateId(),
             name: name,
@@ -136,7 +136,7 @@ export const deleteCardset = async (cardset_id) => {
         const cardset_collection = await database.collection("cardsets");
 
         return await cardset_collection.deleteOne({
-            user_id: process.env.USER,
+            user_id: process.env.USERNAME,
             cardset_id: cardset_id
         })
     } catch (e) {
@@ -152,7 +152,7 @@ export const getCardById = async (flashcard_id) => {
         const flashcards_collection = await database.collection("flashcards");
 
         const flashcard = await flashcards_collection.findOne({
-            user_id: process.env.USER,
+            user_id: process.env.USERNAME,
             flashcard_id: flashcard_id
         })
 
@@ -170,7 +170,7 @@ export const getAllCards = async (cardset_id) => {
         const flashcards_collection = await database.collection("flashcards");
 
         return await flashcards_collection.find({
-            user_id: process.env.USER,
+            user_id: process.env.USERNAME,
             cardset_id: cardset_id
         }).toArray()
 
@@ -189,7 +189,7 @@ export const createCardDraft = async (cardset_id, name, questionHTML) => {
         const flashcardId = generateId()
 
         const flashcard= await flashcards_collection.insertOne({
-            user_id: process.env.USER,
+            user_id: process.env.USERNAME,
             cardset_id: cardset_id,
             flashcard_id: flashcardId,
             draft: true,
@@ -199,12 +199,12 @@ export const createCardDraft = async (cardset_id, name, questionHTML) => {
         })
 
         const count_cards = await flashcards_collection.countDocuments({
-            user_id: process.env.USER,
+            user_id: process.env.USERNAME,
             cardset_id: cardset_id
         })
 
         await cardset_collection.updateOne({
-            user_id: process.env.USER,
+            user_id: process.env.USERNAME,
             cardset_id: cardset_id
         }, {
             $set: { count_cards: count_cards }
@@ -228,7 +228,7 @@ export const finishCreateCard = async (flashcard_id, cardset_id, answerHTML) => 
         const flashcards_collection = await database.collection("flashcards");
 
         const flashcard = await flashcards_collection.updateOne({
-            user_id: process.env.USER,
+            user_id: process.env.USERNAME,
             cardset_id: cardset_id,
             flashcard_id: flashcard_id,
         }, {
@@ -255,7 +255,7 @@ export const updateCard = async (flashcard_id, name, questionHTML, answerHTML) =
         const flashcards_collection = await database.collection("flashcards");
 
         const flashcard = await flashcards_collection.updateOne({
-            user_id: process.env.USER,
+            user_id: process.env.USERNAME,
             flashcard_id: flashcard_id,
         }, {
             $set: {
@@ -290,7 +290,7 @@ export const startCourse = async (cardset_id) => {
         session.startTransaction();
 
         const cardset = await cardset_collection.findOneAndUpdate({
-            user_id: process.env.USER,
+            user_id: process.env.USERNAME,
             cardset_id: cardset_id,
         }, {
             $set: {
@@ -299,14 +299,14 @@ export const startCourse = async (cardset_id) => {
         })
 
         const theme = await themes_collection.findOne({
-            user_id: process.env.USER,
+            user_id: process.env.USERNAME,
             theme_id: cardset.theme_id
         })
 
         const flashcard = await flashcards_collection.aggregate([
             {
                 $match: {
-                    user_id: process.env.USER,
+                    user_id: process.env.USERNAME,
                     cardset_id: cardset_id,
                     draft: false,
                 }
@@ -317,13 +317,13 @@ export const startCourse = async (cardset_id) => {
         ]).toArray();
 
         const finished_count = await flashcards_collection.countDocuments({
-            user_id: process.env.USER,
+            user_id: process.env.USERNAME,
             cardset_id: cardset_id,
             status: "finished"
         });
 
         const cards_count = await flashcards_collection.countDocuments({
-            user_id: process.env.USER,
+            user_id: process.env.USERNAME,
             cardset_id: cardset_id,
         });
 
@@ -355,7 +355,7 @@ export const resetCourse = async (cardset_id) => {
         session.startTransaction();
 
         const cardset = await cardset_collection.updateOne({
-            user_id: process.env.USER,
+            user_id: process.env.USERNAME,
             cardset_id: cardset_id,
         }, {
             $set: {
@@ -365,7 +365,7 @@ export const resetCourse = async (cardset_id) => {
         })
 
         await flashcards_collection.updateMany({
-            user_id: process.env.USER,
+            user_id: process.env.USERNAME,
             cardset_id: cardset_id,
         }, {
             $set: {
@@ -398,7 +398,7 @@ export const getAnotherCourseCard = async (cardset_id) => {
         const flashcard = await flashcards_collection.aggregate([
             {
                 $match: {
-                    user_id: process.env.USER,
+                    user_id: process.env.USERNAME,
                     cardset_id: cardset_id,
                     draft: false,
                     $or: [
@@ -413,12 +413,12 @@ export const getAnotherCourseCard = async (cardset_id) => {
         ]).toArray();
 
         const finished_count = await flashcards_collection.countDocuments({
-            user_id: process.env.USER,
+            user_id: process.env.USERNAME,
             cardset_id: cardset_id,
             status: "finished"
         });
         const cards_count = await flashcards_collection.countDocuments({
-            user_id: process.env.USER,
+            user_id: process.env.USERNAME,
             cardset_id: cardset_id,
         });
 
@@ -451,7 +451,7 @@ export const updateCourseCard = async (cardset_id, flashcard_id, type) => {
         const cardset_collection = await database.collection("cardsets");
 
         const flashcard = await flashcards_collection.updateOne({
-            user_id: process.env.USER,
+            user_id: process.env.USERNAME,
             cardset_id: cardset_id,
             flashcard_id: flashcard_id
         }, {
@@ -462,7 +462,7 @@ export const updateCourseCard = async (cardset_id, flashcard_id, type) => {
 
         if(type) {
             await cardset_collection.updateOne({
-                user_id: process.env.USER,
+                user_id: process.env.USERNAME,
                 cardset_id: cardset_id,
             }, {
                 $inc: {
