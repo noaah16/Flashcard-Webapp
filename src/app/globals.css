@@ -438,11 +438,11 @@ button.dark:hover {
     right: 10%;
   }
   main {
-    padding: 15px;
+    padding: 20px;
   }
   main .create-button {
     position: fixed;
     bottom: 40px;
-    right: 15px;
+    right: 20px;
   }
 }
