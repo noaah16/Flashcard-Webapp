@@ -15,6 +15,8 @@ const Page = ({params}) => {
     const [flipped, setFlipped] = useState(false);
     const [finished, setFinished] = useState(false)
 
+    const [loadCard, setLoadCard] = useState(false)
+
     const handleCancelClick = async () => {
         router.push(`/theme/${data["__theme"].theme_id}`)
         router.refresh()
@@ -22,9 +24,12 @@ const Page = ({params}) => {
 
     const handleClickNo = async (event) => {
         event.preventDefault()
+        if(loadCard) return
 
         const cardElement = document.querySelector(`.flip-card-back`)
         cardElement.classList.add("red-border")
+
+        setLoadCard(true)
 
         const result = await updateCourseCard(params.id, flashcard.flashcard_id, false);
         if(!result.acknowledged) return null
@@ -40,6 +45,7 @@ const Page = ({params}) => {
                 _finished_count: data["_finished_count"]
             }))
 
+            setLoadCard(false)
             setFlipped(false)
             cardElement.classList.remove("red-border")
         }, 300)
@@ -47,9 +53,12 @@ const Page = ({params}) => {
 
     const handleClickYes = async (event) => {
         event.preventDefault()
+        if(loadCard) return
 
         const cardElement = document.querySelector(`.flip-card-back`)
         cardElement.classList.add("green-border")
+
+        setLoadCard(true)
 
         const result = await updateCourseCard(params.id, flashcard.flashcard_id, true);
         if(!result.acknowledged) return null
@@ -69,6 +78,7 @@ const Page = ({params}) => {
                 _finished_count: data["_finished_count"]
             }))
 
+            setLoadCard(false)
             setFlipped(false)
             cardElement.classList.remove("green-border")
         }, 500)
