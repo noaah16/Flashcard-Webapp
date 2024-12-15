@@ -80,6 +80,12 @@ form {
   gap: 20px;
   margin-top: 30px;
 }
+form.editor {
+  display: flex;
+  flex-flow: column;
+  gap: 0;
+  margin-top: 0;
+}
 
 input {
   background: var(--accent);
@@ -164,6 +170,8 @@ button.dark:hover {
   justify-content: space-between;
   align-items: center;
 
+  gap: 15px;
+
   width: 100%;
 }
 .container {
@@ -221,6 +229,7 @@ button.dark:hover {
 }
 .item.completed {
   border: 3px solid var(--green);
+  background: rgba(115, 197, 99, 0.3);
 }
 .item.center {
   display: flex;
@@ -422,9 +431,18 @@ button.dark:hover {
   background: var(--accent);
   border-radius: 10px;
 }
+
 @media (max-width: 600px) {
   .welcome-newbie {
     left: 40%;
     right: 10%;
+  }
+  main {
+    padding: 15px;
+  }
+  main .create-button {
+    position: fixed;
+    bottom: 40px;
+    right: 15px;
   }
 }

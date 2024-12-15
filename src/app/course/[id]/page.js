@@ -82,13 +82,13 @@ const Page = ({params}) => {
 
     if(!flashcard && !finished) {
         return <div className="course-container">
-            <p>Loading...</p>
+            <p>Warte kurz...</p>
         </div>
     }
 
     if(!data) {
         return <div className="course-container">
-            <p>Loading...</p>
+            <p>Warte kurz...</p>
         </div>
     }
 
@@ -116,11 +116,11 @@ const Page = ({params}) => {
             <div onClick={handleClickFlip} className={`flip-card ${flipped ? "flipped" : ""}`}>
                 <div className="flip-card-inner">
                     <div className="flip-card-front">
-                        <div className="type">Question</div>
+                        <div className="type">Frageseite</div>
                         <div dangerouslySetInnerHTML={{ __html: flashcard["questionHTML"] }} />
                     </div>
                     <div className="flip-card-back">
-                        <div className="type">Answer</div>
+                        <div className="type">Antwortseite</div>
                         <div dangerouslySetInnerHTML={{__html: flashcard["answerHTML"]}}/>
                     </div>
                 </div>

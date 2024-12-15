@@ -81,18 +81,15 @@ const Page = ({params}) => {
                     </button>
                 </div>
             </div>
-
-            <form onSubmit={handleSubmit}>
+            <form className="editor" onSubmit={handleSubmit}>
                 <div className="edit-container">
                     <EditorContent editor={questionEditor}/>
                     <EditorContent editor={answerEditor}/>
                 </div>
-
                 <div className="edit-interactions">
                     <button>Speichern</button>
                 </div>
             </form>
-
         </div>
     );
 }

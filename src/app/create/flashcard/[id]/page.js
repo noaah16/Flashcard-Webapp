@@ -79,7 +79,7 @@ export default function Page({params}) {
         case "answer":
             return <div className="container">
                 <div className="create-head">
-                    <h1>Card erstellen - Antwort - {draftFlashcardId}</h1>
+                    <h1>Card erstellen - Antwort</h1>
                     <button onClick={handleCancelClick} className="icon-button">
                         <XAltIcon/>
                     </button>

@@ -418,8 +418,6 @@ export const getAnotherCourseCard = async (cardset_id) => {
             cardset_id: cardset_id,
         });
 
-        console.log(flashcard[0])
-
         if(!flashcard[0]) {
             await cardset_collection.updateOne({
                 cardset_id: cardset_id,
@@ -458,14 +456,16 @@ export const updateCourseCard = async (cardset_id, flashcard_id, type) => {
             }
         })
 
-        await cardset_collection.updateOne({
-            user_id: "", //TODO: USER ID
-            cardset_id: cardset_id,
-        }, {
-            $inc: {
-                finished_count: 1
-            }
-        })
+        if(type) {
+            await cardset_collection.updateOne({
+                user_id: "", //TODO: USER ID
+                cardset_id: cardset_id,
+            }, {
+                $inc: {
+                    finished_count: 1
+                }
+            })
+        }
 
         return JSON.parse(JSON.stringify({
             acknowledged: flashcard.acknowledged,
