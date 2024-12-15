@@ -220,7 +220,6 @@ button.dark:hover {
   padding: 10px;
   height: 160px;
   border-radius: 10px;
-  cursor: pointer;
 
   word-wrap: break-word; /* sorgt für Umbrüche innerhalb von Wörtern */
   overflow-wrap: break-word; /* moderne Alternative zu word-wrap */
@@ -361,7 +360,6 @@ button.dark:hover {
 
   background: var(--accent);
   border-radius: 10px;
-  cursor: pointer;
   user-select: none;
 }
 .flip-card-back {
@@ -377,7 +375,6 @@ button.dark:hover {
   background: var(--accent);
   border: 5px solid #515f78;
   border-radius: 10px;
-  cursor: pointer;
   user-select: none;
 }
 
