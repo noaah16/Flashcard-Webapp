@@ -398,7 +398,7 @@ button.dark:hover {
   border: 10px solid var(--green);
 }
 .flip-card-back.red-border {
-  border: 15px solid var(--red);
+  border: 10px solid var(--red);
 }
 
 .flip-card-content {
