@@ -3,7 +3,7 @@
 import XAltIcon from "@/assets/X-Alt-Icon";
 import {useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
-import {createCardset, getAnotherCourseCard, resetCourse, startCourse, updateCourseCard} from "@/app/actions";
+import {getAnotherCourseCard, startCourse, updateCourseCard} from "@/app/actions";
 
 const Page = ({params}) => {
     const router = useRouter();
@@ -123,7 +123,7 @@ const Page = ({params}) => {
                     </div>
                     <div className="flip-card-back">
                         <div className="type">Antwortseite</div>
-                        <div dangerouslySetInnerHTML={{__html: flashcard["answerHTML"]}}/>
+                        <div className="flip-card-content" dangerouslySetInnerHTML={{__html: flashcard["answerHTML"]}}/>
                     </div>
                 </div>
             </div>
