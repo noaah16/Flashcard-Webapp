@@ -81,7 +81,7 @@ const Page = ({params}) => {
             setLoadCard(false)
             setFlipped(false)
             cardElement.classList.remove("green-border")
-        }, 500)
+        }, 300)
 
     }
 
