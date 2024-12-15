@@ -362,6 +362,7 @@ button.dark:hover {
   background: var(--accent);
   border-radius: 10px;
   cursor: pointer;
+  user-select: none;
 }
 .flip-card-back {
   position: relative;
@@ -377,6 +378,7 @@ button.dark:hover {
   border: 5px solid #515f78;
   border-radius: 10px;
   cursor: pointer;
+  user-select: none;
 }
 
 .type {
