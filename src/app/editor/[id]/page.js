@@ -29,7 +29,7 @@ const Page = async ({params}) => {
                     !cards_data.length ? emptyList : cards_data.map((item, index) => {
                         return (
                             <Link href={`/editor/edit/${item.flashcard_id}`} key={index}>
-                                <div className="item center">
+                                <div className={`item center ${item.draft ? "draft-mode" : ""}`}>
                                     <p> { item.name.replace(/\?/g, "") }? </p>
                                 </div>
                             </Link>
@@ -37,6 +37,9 @@ const Page = async ({params}) => {
                     })
                 }
             </div>
+            <button title="Dadurch kann die Zählung neu synchronisiert werden, wenn Karten über die Datenbank importiert wurden." className="re-sync-button">
+                Re Sync
+            </button>
             <Link className="create-button" href={`/create/flashcard/${params.id}`}>
                 <PlusAltIcon/>
                 Flashcard erstellen

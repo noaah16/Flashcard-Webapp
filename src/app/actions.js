@@ -207,7 +207,8 @@ export const createCardDraft = async (cardset_id, name, questionHTML) => {
 
         const count_cards = await flashcards_collection.countDocuments({
             user_id: process.env.DB_USER,
-            cardset_id: cardset_id
+            cardset_id: cardset_id,
+            draft: false,
         })
 
         await cardset_collection.updateOne({
@@ -334,12 +335,14 @@ export const startCourse = async (cardset_id) => {
         const finished_count = await flashcards_collection.countDocuments({
             user_id: process.env.DB_USER,
             cardset_id: cardset_id,
-            status: "finished"
+            status: "finished",
+            draft: false,
         });
 
         const cards_count = await flashcards_collection.countDocuments({
             user_id: process.env.DB_USER,
             cardset_id: cardset_id,
+            draft: false,
         });
 
         await session.commitTransaction();
@@ -430,11 +433,13 @@ export const getAnotherCourseCard = async (cardset_id) => {
         const finished_count = await flashcards_collection.countDocuments({
             user_id: process.env.DB_USER,
             cardset_id: cardset_id,
-            status: "finished"
+            status: "finished",
+            draft: false,
         });
         const cards_count = await flashcards_collection.countDocuments({
             user_id: process.env.DB_USER,
             cardset_id: cardset_id,
+            draft: false,
         });
 
         if(!flashcard[0]) {
@@ -550,6 +555,41 @@ export const getAIAnswers = async (question) => {
     } catch (e) {
         console.error(e);
         return { error: "ERROR" };
+    }
+}
+
+export const syncCardsetChanges = async (cardset_id) => {
+    try {
+        const client = await mongodb
+        const database = client.db("flashcard-app");
+        const flashcards_collection = await database.collection("flashcards");
+        const cardset_collection = await database.collection("cardsets");
+
+        const finished_count = await flashcards_collection.countDocuments({
+            user_id: process.env.DB_USER,
+            cardset_id: cardset_id,
+            status: "finished",
+            draft: false,
+        });
+
+        const cards_count = await flashcards_collection.countDocuments({
+            user_id: process.env.DB_USER,
+            cardset_id: cardset_id,
+            draft: false,
+        });
+
+        await cardset_collection.updateOne({
+            user_id: process.env.DB_USER,
+            cardset_id: cardset_id,
+        }, {
+            $set: {
+                finished_count: finished_count,
+                count_cards: cards_count,
+            }
+        })
+
+    } catch (e) {
+
     }
 }
 

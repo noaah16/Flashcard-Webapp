@@ -37,10 +37,10 @@ main {
   height: 100%;
 }
 main .create-button {
-  position: absolute;
+  position: fixed;
 
-  bottom: 40px;
-  right: 25px;
+  bottom: 50px;
+  right: 50px;
 
   display: flex;
   justify-content: center;
@@ -64,6 +64,37 @@ main .create-button {
 
   background: var(--blue);
   height: 50px;
+}
+main button.re-sync-button {
+  position: fixed;
+
+  bottom: 110px;
+  right: 50px;
+
+  display: flex;;
+  align-items: center;
+
+  font-size: 16px;
+  font-weight: normal;
+
+  cursor: pointer;
+
+  border-radius: 10px;
+
+  color: var(--white);
+
+  padding-left: 15px;
+  padding-right: 15px;
+
+  text-underline: none;
+  text-decoration: none;
+
+  background: rgb(84, 99, 126, 0.4) !important;
+  border: 1px solid rgb(84, 99, 126);
+
+  height: 30px;
+  width: fit-content;
+
 }
 
 h3 {
@@ -241,6 +272,11 @@ button.dark:hover {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.item.draft-mode {
+  border: 3px solid #dcca6f;
+  background: rgb(220, 202, 111, 0.3);
+  color: #dcca6f;
 }
 .item-info p {
   color: var(--white-dim);
@@ -517,5 +553,8 @@ button.dark:hover {
     position: fixed;
     bottom: 40px;
     right: 20px;
+  }
+  main button.re-sync-button {
+    display: none;
   }
 }
